@@ -1,5 +1,6 @@
 # godot-ci-rust
 
-[example](example-github-actions.yml)
+[example github action](example-github-actions.yml)
+[docker image](https://hub.docker.com/repository/docker/heraclitoqsaldanha/godot-ci-rust)
 
 Dual-licensed under MIT or the [UNLICENSE](https://unlicense.org).
