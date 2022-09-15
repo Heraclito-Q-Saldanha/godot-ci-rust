@@ -1,0 +1,28 @@
+name: action
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    container:
+      image: heraclitoqsaldanha/godot-ci-rust:3.5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/templates
+          mkdir -v -p ~/.config/godot
+          mv /root/.local/share/godot/templates/3.5.stable ~/.local/share/godot/templates/3.5.stable
+          mv /root/.config/godot/editor_settings-3.tres ~/.config/godot/
+      - name: Linux Export
+        run: |
+          mkdir -v -p build/linux
+          godot -v --export "linux" ./build/linux/release.x64
+
