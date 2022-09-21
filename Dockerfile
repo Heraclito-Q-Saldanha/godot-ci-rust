@@ -20,6 +20,9 @@ RUN dpkg --add-architecture i386 \
 		curl \
 		unzip \
 		openjdk-11-jdk-headless \
+		g++-multilib \
+		gcc-multilib \
+		libc6-dev-i386 \
 	&& apt-get clean \
 	&& apt-get autoremove
 
@@ -58,6 +61,17 @@ RUN rustup target add \
     i686-linux-android \
     x86_64-unknown-linux-gnu \
     i686-unknown-linux-gnu
+
+RUN echo " \
+[target.armv7-linux-androideabi] \
+linker = \"$ANDROID_SDK_ROOT/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi29-clang\" \
+[target.aarch64-linux-android] \
+linker = \"$ANDROID_SDK_ROOT/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android29-clang\" \
+[target.i686-linux-android] \
+linker = \"$ANDROID_SDK_ROOT/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android29-clang\" \
+[target.x86_64-linux-android] \
+linker = \"$ANDROID_SDK_ROOT/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android29-clang\" \
+" > $HOME/.cargo/config
 
 # godot
 
