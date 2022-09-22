@@ -2,9 +2,6 @@ FROM debian
 
 # base
 
-USER root
-ENV HOME /root
-
 ARG DEBIAN_FRONTEND=noninteractive
 RUN dpkg --add-architecture i386 \
 	&& apt-get update \
@@ -31,7 +28,7 @@ RUN dpkg --add-architecture i386 \
 # android sdk
 
 ARG ANDROID_CMDLINE_URL=https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip
-ARG ANDROID_SDK_ROOT=/opt/android
+ENV ANDROID_SDK_ROOT=/opt/android
 RUN mkdir -p ${ANDROID_SDK_ROOT}/cmdline-tools/latest \
 	&& cd /tmp \
     && wget -q ${ANDROID_CMDLINE_URL} -O android-commandline-tools.zip \
@@ -45,15 +42,15 @@ RUN mkdir -p ${ANDROID_SDK_ROOT}/sdk \
 	&& yes | sdkmanager --licenses \
 	&& yes | sdkmanager "build-tools;30.0.3" "platforms;android-31" "cmake;3.10.2.4988404" "ndk;21.4.7075529"
 
-ARG ANDROID_KEYSTORE_DIR=$HOME/.android
+ARG ANDROID_KEYSTORE_DIR=/root/.android
 RUN mkdir -p $ANDROID_KEYSTORE_DIR \
 	&& cd $ANDROID_KEYSTORE_DIR \
 	&& keytool -keyalg RSA -genkeypair -alias androiddebugkey -keypass android -keystore debug.keystore -storepass android -dname "CN=Android Debug,O=Android,C=US" -validity 9999 -deststoretype pkcs12
 
 # rust
 
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-ENV PATH $HOME/.cargo/bin:$PATH
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain stable -y
+ENV PATH /root/.cargo/bin:$PATH
 
 RUN rustup target add \
     x86_64-pc-windows-gnu \
@@ -73,7 +70,7 @@ linker = \"$ANDROID_SDK_ROOT/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86
 linker = \"$ANDROID_SDK_ROOT/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android29-clang\" \n \
 [target.x86_64-linux-android] \n \
 linker = \"$ANDROID_SDK_ROOT/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android29-clang\" \n \
-" > $HOME/.cargo/config
+" >> /root/.cargo/config
 
 # godot
 
@@ -91,7 +88,7 @@ RUN mkdir -p $GODOT_DIR \
 
 ENV PATH=$GODOT_DIR:$PATH
 
-ARG GODOT_TEMPLATE_DIR=$HOME/.local/share/godot/templates
+ARG GODOT_TEMPLATE_DIR=/root/.local/share/godot/templates
 RUN mkdir -p $GODOT_TEMPLATE_DIR \
 	&& cd $GODOT_TEMPLATE_DIR \
 	&& wget -nc -nv $GODOT_BASE_URL/$GODOT_VERSION/Godot_v$GODOT_VERSION-stable_export_templates.tpz \
@@ -99,7 +96,7 @@ RUN mkdir -p $GODOT_TEMPLATE_DIR \
 	&& mv -v templates $GODOT_VERSION.stable \
 	&& rm -v Godot_v$GODOT_VERSION-stable_export_templates.tpz
 
-ARG GODOT_EDITOR_CONFIG_DIR=$HOME/.config/godot
+ARG GODOT_EDITOR_CONFIG_DIR=/root/.config/godot
 ARG GODOT_EDITOR_CONFIG_FILENAME=editor_settings-3.tres
 
 RUN mkdir -p $GODOT_EDITOR_CONFIG_DIR \
