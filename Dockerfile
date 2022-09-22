@@ -22,6 +22,8 @@ RUN dpkg --add-architecture i386 \
 		openjdk-11-jdk-headless \
 		g++-multilib \
 		gcc-multilib \
+		gcc-mingw-w64-x86-64 \
+		gcc-mingw-w64-i686 \
 		libc6-dev-i386 \
 	&& apt-get clean \
 	&& apt-get autoremove
@@ -63,14 +65,14 @@ RUN rustup target add \
     i686-unknown-linux-gnu
 
 RUN echo " \
-[target.armv7-linux-androideabi] \
-linker = \"$ANDROID_SDK_ROOT/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi29-clang\" \
-[target.aarch64-linux-android] \
-linker = \"$ANDROID_SDK_ROOT/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android29-clang\" \
-[target.i686-linux-android] \
-linker = \"$ANDROID_SDK_ROOT/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android29-clang\" \
-[target.x86_64-linux-android] \
-linker = \"$ANDROID_SDK_ROOT/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android29-clang\" \
+[target.armv7-linux-androideabi] \n \
+linker = \"$ANDROID_SDK_ROOT/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi29-clang\" \n \
+[target.aarch64-linux-android] \n \
+linker = \"$ANDROID_SDK_ROOT/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android29-clang\" \n \
+[target.i686-linux-android] \n \
+linker = \"$ANDROID_SDK_ROOT/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android29-clang\" \n \
+[target.x86_64-linux-android] \n \
+linker = \"$ANDROID_SDK_ROOT/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android29-clang\" \n \
 " > $HOME/.cargo/config
 
 # godot
